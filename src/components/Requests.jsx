@@ -39,7 +39,8 @@ const Requests = () => {
   if (!requests) return;
 
   if (requests.length === 0)
-    return <h1 className="flex justify-center my-10"> No Requests Found</h1>;
+    return <h1 className="flex justify-center my-10 text-3xl font-bold text-white"> No Requests Found</h1>;
+  
   return (
     <div className="text-center my-10">
       <h1 className="text-bold text-white text-3xl">Connection Requests</h1>
@@ -51,7 +52,7 @@ const Requests = () => {
         return (
           <div
             key={_id}
-            className=" flex justify-between items-center m-4 p-4 rounded-lg bg-base-300 w-2/3 mx-auto"
+            className=" flex justify-between items-center m-4 p-4 rounded-lg bg-base-300  mx-auto"
           >
             <div>
               <img

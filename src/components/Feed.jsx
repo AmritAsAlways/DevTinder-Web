@@ -15,9 +15,9 @@ const Feed = () => {
       const res = await axios.get(BASE_URL + "/feed", {
         withCredentials: true,
       });
-      dispatch(addFeed(res?.data));
+      dispatch(addFeed(res.data));
     } catch (err) {
-      //TODO: handle error
+      console.log("Feed Error:", err.response?.status, err.response?.data);
     }
   };
 
@@ -25,7 +25,14 @@ const Feed = () => {
     getFeed();
   }, []);
 
-  console.log(feed);
+  if (!feed) return <h1>Loading...</h1>;
+  console.log(feed[0]);
+
+  if (feed.length <= 0)
+    return <h1 className="flex justify-center my-10">No new users founds!</h1>;
+
+  console.log("Feed from Redux:", feed);
+
   return (
     feed && ( //this line tells that why my feed is present then only load this part
       <div className="flex justify-center my-10">

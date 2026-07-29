@@ -24,15 +24,19 @@ const Connections = () => {
 
   if (!connections) return;
 
-  if (connections.length === 0) return <h1> No Connections Found</h1>;
+  if (connections.length === 0)
+    return (
+      <div className="flex justify-center items-center my-10">
+      <h1 className="text-3xl font-bold text-white">
+        No Connections Found
+      </h1>
+    </div>
+    );
 
   return (
-  <div className="max-w-5xl mx-auto px-4 py-10">
-    <h1 className="text-4xl font-bold text-center mb-10">
-      🤝 My Connections
-    </h1>
+    <div className="text-center my-10">
+      <h1 className="text-bold text-white text-3xl">Connections</h1>
 
-    <div className="space-y-6">
       {connections.map((connection) => {
         const { _id, firstName, lastName, photoURL, age, gender, about } =
           connection;
@@ -40,47 +44,26 @@ const Connections = () => {
         return (
           <div
             key={_id}
-            className="card bg-base-300 shadow-xl hover:shadow-2xl transition-all duration-300"
+            className=" flex m-4 p-4 rounded-lg bg-base-300 w-1/2 mx-auto"
           >
-            <div className="card-body flex flex-col md:flex-row items-center gap-6">
-
-              {/* Profile Image */}
+            <div>
               <img
+                alt="photo"
+                className="w-20 h-20 rounded-full"
                 src={photoURL}
-                alt={firstName}
-                className="w-28 h-28 rounded-full object-cover border-4 border-primary"
               />
-
-              {/* User Info */}
-              <div className="flex-1 text-center md:text-left">
-                <h2 className="text-2xl font-bold">
-                  {firstName} {lastName}
-                </h2>
-
-                {age && gender && (
-                  <div className="badge badge-outline badge-primary mt-2">
-                    {age} years • {gender}
-                  </div>
-                )}
-
-                <p className="mt-4 text-base-content/80">
-                  {about}
-                </p>
-              </div>
-
-              {/* Status */}
-              <div>
-                <button className="btn btn-success btn-outline">
-                  ✓ Connected
-                </button>
-              </div>
-
+            </div>
+            <div className="text-left mx-4 ">
+              <h2 className="font-bold text-xl">
+                {firstName + " " + lastName}
+              </h2>
+              {age && gender && <p>{age + ", " + gender}</p>}
+              <p>{about}</p>
             </div>
           </div>
         );
       })}
     </div>
-  </div>
-);
+  );
 };
 export default Connections;
