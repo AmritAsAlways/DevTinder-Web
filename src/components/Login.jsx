@@ -4,13 +4,14 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
+import {removeFeed} from "../utils/feedSlice"
 
 const Login = () => {
   const navigate = useNavigate();
   const [emailId, setEmailId] = useState("elon@gmail.com");
   const [password, setPassword] = useState("Elon@123");
   const dispatch = useDispatch();
-  const [error,setError] = useState("");
+  const [error, setError] = useState("");
 
   const handleLogin = async () => {
     try {
@@ -26,10 +27,11 @@ const Login = () => {
       );
 
       console.log(res.data); //now we will store this data inside the redux store
+      dispatch(removeFeed());
       dispatch(addUser(res.data));
-      return navigate("/");
+      navigate("/");
     } catch (err) {
-      setError(err?.response?.data || "Something went wrong"); 
+      setError(err?.response?.data || "Something went wrong");
     }
   };
 
