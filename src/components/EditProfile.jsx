@@ -17,6 +17,30 @@ const EditProfile = ({ user }) => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+const handlePhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("photo", file);
+
+    setUploading(true);
+    setError("");
+    try {
+      const res = await axios.post(BASE_URL + "/profile/upload-photo", formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      // only update local preview state — DB/Redux update happens on Save
+      setPhotoURL(res?.data?.photoURL);
+    } catch (err) {
+      setError(err.response?.data || "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const saveProfile = async () => {
     //Clear Errors
@@ -80,14 +104,25 @@ const EditProfile = ({ user }) => {
                     />
                   </label>
                   <div className="label">
-                    <span className="label-text">Photo URL :</span>
+                    <span className="label-text">Profile Photo:</span>
                   </div>
+                  {photoURL && (
+                    <img
+                      src={photoURL}
+                      alt="preview"
+                      className="w-24 h-24 rounded-full object-cover mb-2"
+                    />
+                  )}
                   <input
-                    type="text"
-                    value={photoURL}
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setPhotoURL(e.target.value)}
+                    type="file"
+                    accept="image/*"
+                    className="file-input file-input-bordered w-full max-w-xs"
+                    onChange={handlePhotoChange}
+                    disabled={uploading}
                   />
+                  {uploading && (
+                    <span className="text-sm text-gray-400">Uploading...</span>
+                  )}
                 </label>
                 <label className="form-control w-full max-w-xs my-2">
                   <div className="label">
