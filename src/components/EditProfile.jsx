@@ -19,7 +19,7 @@ const EditProfile = ({ user }) => {
   const [showToast, setShowToast] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-const handlePhotoChange = async (e) => {
+  const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -74,85 +74,95 @@ const handlePhotoChange = async (e) => {
 
   return (
     <>
-      <div className="flex justify-center my-10">
-        <div className="flex justify-center mx-10">
-          <div className="card bg-base-300 w-96 shadow-xl">
-            <div className="card-body">
-              <h2 className="card-title justify-center">Edit Profile</h2>
-              <div>
-                <label className="form-control w-full max-w-xs my-2">
-                  <div className="label">
-                    <span className="label-text">First Name:</span>
+      <div className="flex flex-col lg:flex-row justify-center items-start gap-8 my-10 px-4 max-w-5xl mx-auto">
+        {/* ---------- Form Card ---------- */}
+        <div className="card bg-base-300 shadow-xl w-full lg:w-[420px]">
+          <div className="card-body">
+            <h2 className="card-title justify-center text-2xl mb-2">
+              Edit Profile
+            </h2>
+
+            {/* Photo section */}
+            <div className="flex flex-col items-center gap-2 py-2 border-b border-base-100/40 mb-4">
+              {photoURL && (
+                <img
+                  src={photoURL}
+                  alt="preview"
+                  className="w-24 h-24 rounded-full object-cover ring ring-primary ring-offset-base-300 ring-offset-2"
+                />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                className="file-input file-input-bordered file-input-sm w-full max-w-xs mt-2"
+                onChange={handlePhotoChange}
+                disabled={uploading}
+              />
+              {uploading && (
+                <span className="text-xs text-gray-400">Uploading...</span>
+              )}
+            </div>
+
+            {/* Basic info */}
+            <div className="flex flex-col gap-3">
+              <p className="text-xs uppercase tracking-wide text-gray-400 font-semibold">
+                Basic Info
+              </p>
+
+              <label className="form-control w-full">
+                <div className="label py-1">
+                  <span className="label-text">First Name</span>
+                </div>
+                <input
+                  type="text"
+                  value={firstName}
+                  className="input input-bordered input-sm w-full"
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </label>
+
+              <label className="form-control w-full">
+                <div className="label py-1">
+                  <span className="label-text">Last Name</span>
+                </div>
+                <input
+                  type="text"
+                  value={lastName}
+                  className="input input-bordered input-sm w-full"
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </label>
+
+              <div className="flex gap-3">
+                <label className="form-control flex-1">
+                  <div className="label py-1">
+                    <span className="label-text">Age</span>
                   </div>
                   <input
-                    type="text"
-                    value={firstName}
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs my-2">
-                  <label className="form-control w-full max-w-xs my-2">
-                    <div className="label">
-                      <span className="label-text">Last Name:</span>
-                    </div>
-                    <input
-                      type="text"
-                      value={lastName}
-                      className="input input-bordered w-full max-w-xs"
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </label>
-                  <div className="label">
-                    <span className="label-text">Profile Photo:</span>
-                  </div>
-                  {photoURL && (
-                    <img
-                      src={photoURL}
-                      alt="preview"
-                      className="w-24 h-24 rounded-full object-cover mb-2"
-                    />
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="file-input file-input-bordered w-full max-w-xs"
-                    onChange={handlePhotoChange}
-                    disabled={uploading}
-                  />
-                  {uploading && (
-                    <span className="text-sm text-gray-400">Uploading...</span>
-                  )}
-                </label>
-                <label className="form-control w-full max-w-xs my-2">
-                  <div className="label">
-                    <span className="label-text">Age:</span>
-                  </div>
-                  <input
-                    type="text"
+                    type="number"
+                    min="18"
                     value={age}
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered input-sm w-full"
                     onChange={(e) => setAge(e.target.value)}
                   />
                 </label>
-                <label className="form-control w-full max-w-xs my-2">
-                  <div className="label">
+
+                <label className="form-control flex-1">
+                  <div className="label py-1">
                     <span className="label-text">Gender</span>
                   </div>
-
                   <div
                     className={`dropdown w-full ${isGenderOpen ? "dropdown-open" : ""}`}
                   >
                     <div
                       tabIndex={0}
                       role="button"
-                      className="btn btn-outline w-full justify-between"
+                      className="btn btn-outline btn-sm w-full justify-between font-normal"
                       onClick={() => setIsGenderOpen(true)}
                       onBlur={() => setIsGenderOpen(false)}
                     >
-                      {gender || "Select Gender"}
+                      {gender || "Select"}
                     </div>
-
                     <ul
                       tabIndex={0}
                       className="dropdown-content menu bg-base-100 rounded-box z-50 w-full p-2 shadow"
@@ -167,7 +177,6 @@ const handlePhotoChange = async (e) => {
                           Male
                         </button>
                       </li>
-
                       <li>
                         <button
                           onClick={() => {
@@ -178,7 +187,6 @@ const handlePhotoChange = async (e) => {
                           Female
                         </button>
                       </li>
-
                       <li>
                         <button
                           onClick={() => {
@@ -192,42 +200,84 @@ const handlePhotoChange = async (e) => {
                     </ul>
                   </div>
                 </label>
-                <fieldset className="fieldset w-full max-w-xs my-2">
-                  <legend className="fieldset-legend">About</legend>
-                  <textarea
-                    className="textarea h-24"
-                    placeholder="Tell us about yourself..."
-                    value={about}
-                    onChange={(e) => setAbout(e.target.value)}
-                  ></textarea>
-                  <div className="label">Optional</div>
-                </fieldset>
-                <label className="form-control w-full max-w-xs my-2">
-                  <div className="label">
-                    <span className="label-text">Skills:</span>
-                  </div>
-                  <input
-                    type="text"
-                    value={skills}
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setSkills(e.target.value)}
-                    placeholder=""
-                  />
-                </label>
               </div>
-              <p className="text-red-500">{error}</p>
-              <div className="card-actions justify-center m-2">
-                <button className="btn btn-primary" onClick={saveProfile}>
-                  Save Profile
-                </button>
-              </div>
+            </div>
+
+            {/* About */}
+            <div className="mt-4">
+              <p className="text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2">
+                About
+              </p>
+              <fieldset className="fieldset w-full">
+                <textarea
+                  className="textarea textarea-bordered w-full h-24"
+                  placeholder="Tell us about yourself..."
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                ></textarea>
+                <div className="label py-1">
+                  <span className="label-text-alt text-gray-500">Optional</span>
+                </div>
+              </fieldset>
+            </div>
+
+            {/* Skills */}
+            <div className="mt-2">
+              <p className="text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2">
+                Skills
+              </p>
+              <input
+                type="text"
+                value={skills}
+                className="input input-bordered input-sm w-full"
+                onChange={(e) => setSkills(e.target.value)}
+                placeholder="React, Node.js, MongoDB..."
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Separate each skill with a comma
+              </p>
+            </div>
+
+            {error && (
+              <p className="text-red-500 text-sm mt-3 break-words">
+                {typeof error === "string" ? error : JSON.stringify(error)}
+              </p>
+            )}
+
+            <div className="card-actions justify-center mt-5">
+              <button
+                className="btn btn-primary w-full"
+                onClick={saveProfile}
+              >
+                Save Profile
+              </button>
             </div>
           </div>
         </div>
-        <UserCard
-          user={{ firstName, lastName, photoURL, age, gender, about }}
-        />
+
+        {/* ---------- Live Preview ---------- */}
+        <div className="w-full lg:w-auto flex flex-col items-center gap-3 lg:sticky lg:top-10">
+          <p className="text-xs uppercase tracking-wide text-gray-400 font-semibold self-center lg:self-start">
+            Preview
+          </p>
+          <UserCard
+            preview
+            user={{
+              firstName,
+              lastName,
+              photoURL,
+              age,
+              gender,
+              about,
+              skills: skills
+                .split(",")
+                .map((skill) => skill.trim())
+                .filter((skill) => skill !== ""),
+            }}
+          />
+        </div>
       </div>
+
       {showToast && (
         <div className="toast toast-top toast-center">
           <div className="alert alert-success">

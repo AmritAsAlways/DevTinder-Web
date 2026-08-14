@@ -34,10 +34,11 @@ const Body = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <Outlet />{" "}
-      {/* this is the place where the children elements will get rendered of the body component  */}
+      <main className="flex-1">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );

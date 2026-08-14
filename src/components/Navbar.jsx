@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
+import { removeFeed } from "../utils/feedSlice";
+import { removeConnections } from "../utils/connectionSlice";
+import { clearRequests } from "../utils/requestSlice";
 //using link we added the functionality then when we click on the devtinder it takes us to the
 //"/" route and if we click on profilebutton in the profile it takes us to the "/profile" page
 
@@ -16,6 +19,9 @@ const Navbar = () => {
     try {
       await axios.post(BASE_URL + "/logout", {}, { withCredentials: true }); //run logic of the logout i.e clear cookies
       dispatch(removeUser()); //remove user from the redux store
+      dispatch(removeFeed());
+      dispatch(removeConnections());
+      dispatch(clearRequests());
       return navigate("/login"); //redirect it to login page
     } catch (err) {
       //error logic may be redirected to the err page

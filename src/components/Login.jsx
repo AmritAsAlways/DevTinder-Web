@@ -15,8 +15,11 @@ const Login = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
   const dispatch = useDispatch();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = async () => {
+    setError("");
+    setLoading(true);
     try {
       const res = await axios.post(
         BASE_URL + "/signup",
@@ -24,39 +27,49 @@ const Login = () => {
         { withCredentials: true },
       );
       dispatch(addUser(res.data.data));
-      return navigate("/profile");
+      navigate("/profile");
     } catch (err) {
       setError(err?.response?.data || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogin = async () => {
+    setError("");
+    setLoading(true);
     try {
       const res = await axios.post(
         BASE_URL + "/login",
-        {
-          emailId,
-          password,
-        },
-        {
-          withCredentials: true,
-        },
+        { emailId, password },
+        { withCredentials: true },
       );
-
-      console.log(res.data); //now we will store this data inside the redux store
       dispatch(removeFeed());
       dispatch(addUser(res.data));
       navigate("/");
     } catch (err) {
       setError(err?.response?.data || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (loading) return;
+    isLoginForm ? handleLogin() : handleSignUp();
+  };
+
+  const toggleForm = () => {
+    setError("");
+    setIsLoginForm((value) => !value);
+  };
+
   return (
-    <div className="flex justify-center my-20">
-      <div className="card bg-base-300 w-96 shadow-sm">
-        <div className="card-body">
-          <h2 className="card-title justify-center">
+    <div className="flex justify-center my-20 px-4">
+      <div className="card bg-base-300 w-96 shadow-xl">
+        <form className="card-body" onSubmit={handleSubmit}>
+          <h2 className="card-title justify-center text-2xl">
             {isLoginForm ? "Login" : "Sign Up"}
           </h2>
 
@@ -68,6 +81,7 @@ const Login = () => {
                 </div>
                 <input
                   type="text"
+                  required
                   value={firstName}
                   className="input input-bordered w-full max-w-xs"
                   onChange={(e) => setFirstName(e.target.value)}
@@ -91,7 +105,8 @@ const Login = () => {
           <fieldset className="fieldset my-2">
             <legend className="fieldset-legend">Email Id</legend>
             <input
-              type="text"
+              type="email"
+              required
               className="input"
               value={emailId}
               onChange={(e) => setEmailId(e.target.value)}
@@ -102,32 +117,44 @@ const Login = () => {
             <legend className="fieldset-legend">Password</legend>
             <input
               type="password"
+              required
               className="input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </fieldset>
 
-          <p className="text-red-500">{error}</p>
+          {error && (
+            <p className="text-red-500 text-sm break-words">
+              {typeof error === "string" ? error : JSON.stringify(error)}
+            </p>
+          )}
 
           <div className="card-actions justify-center m-2">
             <button
-              className="btn btn-primary"
-              onClick={isLoginForm ? handleLogin : handleSignUp}
+              type="submit"
+              className="btn btn-primary w-full"
+              disabled={loading}
             >
-              {isLoginForm ? "Login" : "Sign Up"}
+              {loading ? (
+                <span className="loading loading-spinner loading-sm"></span>
+              ) : isLoginForm ? (
+                "Login"
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </div>
 
           <p
-            className="m-auto cursor-pointer py-2"
-            onClick={() => setIsLoginForm((value) => !value)}
+            className="m-auto cursor-pointer py-2 text-sm text-gray-400 hover:text-primary transition"
+            onClick={toggleForm}
           >
             {isLoginForm
               ? "New User? Signup Here"
               : "Existing User? Login Here"}
           </p>
-        </div>
+        </form>
       </div>
     </div>
   );

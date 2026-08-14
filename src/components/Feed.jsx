@@ -25,20 +25,30 @@ const Feed = () => {
     getFeed();
   }, []);
 
-  if (!feed) return <h1>Loading...</h1>;
-  console.log(feed[0]);
+  if (!feed)
+    return (
+      <div className="flex flex-col items-center justify-center my-24 gap-4">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+        <p className="text-gray-400 text-sm">Finding people for you...</p>
+      </div>
+    );
 
   if (feed.length <= 0)
-    return <h1 className="flex justify-center my-10">No new users founds!</h1>;
-
-  console.log("Feed from Redux:", feed);
+    return (
+      <div className="flex flex-col items-center justify-center my-24 gap-2">
+        <h1 className="text-3xl font-bold text-white/80">
+          No new users found!
+        </h1>
+        <p className="text-gray-400 text-sm">
+          Check back later for new profiles.
+        </p>
+      </div>
+    );
 
   return (
-    feed && ( //this line tells that why my feed is present then only load this part
-      <div className="flex justify-center my-10">
-        <UserCard user={feed[0]} />
-      </div>
-    )
+    <div className="flex justify-center my-12 px-4">
+      <UserCard user={feed[0]} />
+    </div>
   );
 };
 

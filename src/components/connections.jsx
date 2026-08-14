@@ -27,45 +27,81 @@ const Connections = () => {
 
   if (connections.length === 0)
     return (
-      <div className="flex justify-center items-center my-10">
-      <h1 className="text-3xl font-bold text-white">
-        No Connections Found
-      </h1>
-    </div>
+      <div className="flex justify-center items-center my-20">
+        <h1 className="text-3xl font-bold text-white/80">
+          No Connections Found
+        </h1>
+      </div>
     );
 
   return (
-    <div className="text-center my-10">
-      <h1 className="text-bold text-white text-3xl">Connections</h1>
+    <div className="my-10 px-4">
+      <h1 className="text-center text-white text-3xl font-bold mb-8 tracking-wide">
+        Connections
+      </h1>
 
-      {connections.map((connection) => {
-        const { _id, firstName, lastName, photoURL, age, gender, about } =
-          connection;
+      <div className="flex flex-col gap-5 max-w-2xl mx-auto">
+        {connections.map((connection) => {
+          const { _id, firstName, lastName, photoURL, age, gender, about, skills } =
+            connection;
 
-        return (
-          <div
-            key={_id}
-            className=" flex  justify-between m-4 p-4 rounded-lg bg-base-300 w-1/2 mx-auto"
-          >
-            <div>
+          return (
+            <div
+              key={_id}
+              className="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-5 rounded-2xl bg-base-300 shadow-md hover:shadow-xl hover:scale-[1.01] transition-all duration-200"
+            >
               <img
                 alt="photo"
-                className="w-20 h-20 rounded-full"
+                className="w-24 h-24 rounded-full object-cover ring ring-primary ring-offset-base-100 ring-offset-2 shrink-0"
                 src={photoURL}
               />
+
+              <div className="text-center sm:text-left flex-1 min-w-0">
+                <h2 className="font-bold text-xl break-words">
+                  {firstName + " " + lastName}
+                </h2>
+                {age && gender && (
+                  <p className="text-sm text-gray-400 mb-1">
+                    {age + " · " + gender}
+                  </p>
+                )}
+                {about && (
+                  <p className="text-sm text-gray-300 mb-2 break-words line-clamp-3">
+                    {about}
+                  </p>
+                )}
+
+                {skills?.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-xs uppercase tracking-wide text-gray-400 mb-1.5 font-semibold">
+                      Skills:
+                    </p>
+                    <div className="flex flex-wrap justify-center sm:justify-start gap-2">
+                      {skills.map((skill, i) => (
+                        <span
+                          key={i}
+                          className="badge badge-primary badge-outline text-xs py-2.5 px-3 max-w-full truncate"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="shrink-0">
+                <Link
+                  to={"/chat/" + connection._id}
+                  className="btn btn-primary btn-sm"
+                >
+                  Chat
+                </Link>
+              </div>
             </div>
-            <div className="text-left mx-4 flex-1">
-              <h2 className="font-bold text-xl">
-                {firstName + " " + lastName}
-              </h2>
-              {age && gender && <p>{age + ", " + gender}</p>}
-            </div>
-            <div>
-              <Link to={"/chat/" + connection._id} className="btn btn-primary mt-2">Chat</Link>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

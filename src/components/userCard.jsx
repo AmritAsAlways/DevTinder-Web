@@ -3,9 +3,9 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../utils/feedSlice";
 
-const UserCard = ({ user }) => {
-  console.log("USER =", user);
-  const { _id, firstName, lastName, photoURL, age, gender, about } = user;
+const UserCard = ({ user, preview = false }) => {
+  const { _id, firstName, lastName, photoURL, age, gender, about, skills } =
+    user;
   const dispatch = useDispatch();
 
   const handleSendRequest = async (status, userId) => {
@@ -20,29 +20,67 @@ const UserCard = ({ user }) => {
   };
 
   return (
-    <div className="card bg-base-300 w-96 shadow-xl">
-      <figure>
-        <img src={photoURL} alt="photo" />
-      </figure>
-      <div className="card-body">
-        <h2 className="card-title">{firstName + " " + lastName}</h2>
-        {age && gender && <p>{age + ", " + gender}</p>}
-        <p>{about}</p>
-        <div className="card-actions justify-center my-4">
-          <button
-            className="btn btn-primary"
-            onClick={() => handleSendRequest("ignored", _id)}
-          >
-            Ignore
-          </button>
-          <button
-            className="btn btn-secondary"
-            onClick={() => handleSendRequest("interested", _id)}
-          >
-            Interested
-          </button>
+    <div className="card bg-base-300 w-80 sm:w-96 shadow-2xl overflow-hidden rounded-2xl">
+      <figure className="relative">
+        <img src={photoURL} alt="photo" className="w-full h-80 object-cover" />
+        {/* gradient overlay with name/age on top of the photo, tinder-style */}
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent px-4 pt-10 pb-3">
+          <h2 className="text-white text-2xl font-bold drop-shadow">
+            {firstName + " " + lastName}
+            {age ? <span className="font-normal text-xl">, {age}</span> : null}
+          </h2>
+          {gender && <p className="text-white/80 text-sm">{gender}</p>}
         </div>
-      </div>
+      </figure>
+
+      <div className="card-body p-5">
+        {about && (
+          <p
+            className={`text-sm text-gray-300 break-words ${
+              preview ? "" : "line-clamp-3"
+            }`}
+          >
+            {about}
+          </p>
+        )}
+
+        {skills?.length > 0 && (
+          <div className="mt-2">
+            <p className="text-xs uppercase tracking-wide text-gray-400 mb-1.5 font-semibold">
+              Skills:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {skills.map((skill, i) => (
+                <span
+                  key={i}
+                  className="badge badge-primary badge-outline text-xs py-2.5 px-3 max-w-full truncate"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!preview && (
+          <div className="card-actions justify-center gap-4 mt-5">
+            <button
+              className="btn btn-outline btn-error btn-circle btn-lg"
+              aria-label="Ignore"
+              onClick={() => handleSendRequest("ignored", _id)}
+            >
+              ✕
+            </button>
+            <button
+              className="btn btn-primary btn-circle btn-lg"
+              aria-label="Interested"
+              onClick={() => handleSendRequest("interested", _id)}
+            >
+              ♥
+            </button>
+          </div>
+        )}
+      </div>      
     </div>
   );
 };
