@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import UserCard from "./UserCard";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
@@ -14,10 +14,90 @@ const EditProfile = ({ user }) => {
   const [isGenderOpen, setIsGenderOpen] = useState(false);
   const [about, setAbout] = useState(user.about || "");
   const [skills, setSkills] = useState(user.skills?.join(", ") || "");
-  const [error, setError] = useState("");
+  const [saveError, setSaveError] = useState(""); // error returned by the server on submit (POST /profile/edit)
+  const [photoUploadError, setPhotoUploadError] = useState(""); // error returned by the server on photo upload
   const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  // the skills input is a comma-separated string in the UI, but the backend
+  // expects an actual array — this same parsed array is reused for both
+  // validation below and the payload sent on save
+  const skillsArray = skills
+    .split(",")
+    .map((skill) => skill.trim())
+    .filter((skill) => skill !== "");
+
+  // ---------------------------------------------------------------------
+  // Live client-side validation — mirrors, field for field, the exact
+  // rules the backend actually enforces (validators.js and the Mongoose
+  // schema). Recomputed on every render via useMemo so it always reflects
+  // the current form values as the user types.
+  // ---------------------------------------------------------------------
+  const fieldErrors = useMemo(() => {
+    const errors = {};
+
+    // firstName: required, 3–100 chars
+    if (!firstName || firstName.trim().length === 0) {
+      errors.firstName = "First name is required.";
+    } else if (firstName.length < 3 || firstName.length > 100) {
+      errors.firstName = `First name must be 3–100 characters (currently ${firstName.length}).`;
+    }
+
+    // lastName: only checked if present, but must be 3–100 chars if so
+    if (lastName && (lastName.length < 3 || lastName.length > 100)) {
+      errors.lastName = `Last name must be 3–100 characters (currently ${lastName.length}).`;
+    }
+
+    // about: capped at 500 CHARACTERS (not words) by the backend
+    if (about && about.length > 500) {
+      errors.about = `About must be 500 characters or fewer (currently ${about.length}).`;
+    }
+
+    // photoURL: must be a valid URL
+    if (photoURL) {
+      try {
+        new URL(photoURL);
+      } catch {
+        errors.photoURL = "Photo must be a valid URL.";
+      }
+    }
+
+    // skills: capped at 10 entries total (not a length-per-skill limit)
+    if (skillsArray.length > 10) {
+      errors.skills = `You can list at most 10 skills (currently ${skillsArray.length}).`;
+    }
+
+    // age: Mongoose schema requires a Number >= 18 (only if provided)
+    if (age !== "" && age !== null && age !== undefined) {
+      if (isNaN(Number(age))) {
+        errors.age = "Age must be a number.";
+      } else if (Number(age) < 18) {
+        errors.age = "Age must be 18 or older.";
+      }
+    }
+
+    // gender: only male/female/others allowed. The dropdown UI already
+    // restricts this to valid options, but validated here too in case
+    // that ever changes.
+    if (
+      gender &&
+      !["male", "female", "others"].includes(gender.toLowerCase())
+    ) {
+      errors.gender = "Gender must be Male, Female, or Others.";
+    }
+
+    return errors;
+  }, [firstName, lastName, about, photoURL, skillsArray.length, age, gender]);
+
+  // combine the live field-validation errors with any server-side photo
+  // upload error, so BOTH kinds show up in the same single panel and BOTH
+  // are equally capable of hiding the Save button
+  const allErrors = {
+    ...fieldErrors,
+    ...(photoUploadError ? { photo: photoUploadError } : {}),
+  };
+  const hasErrors = Object.keys(allErrors).length > 0;
 
   const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
@@ -27,7 +107,7 @@ const EditProfile = ({ user }) => {
     formData.append("photo", file);
 
     setUploading(true);
-    setError("");
+    setPhotoUploadError(""); // clear any previous upload error before retrying
     try {
       const res = await axios.post(BASE_URL + "/profile/upload-photo", formData, {
         withCredentials: true,
@@ -36,15 +116,21 @@ const EditProfile = ({ user }) => {
       // only update local preview state — DB/Redux update happens on Save
       setPhotoURL(res?.data?.photoURL);
     } catch (err) {
-      setError(err.response?.data || "Upload failed");
+      const message = err.response?.data || "Upload failed";
+      setPhotoUploadError(
+        typeof message === "string" ? message : JSON.stringify(message),
+      );
     } finally {
       setUploading(false);
     }
   };
 
   const saveProfile = async () => {
-    //Clear Errors
-    setError("");
+    // safety net: even though the Save button is hidden while hasErrors is
+    // true, don't let a save fire if this is somehow called anyway
+    if (hasErrors) return;
+
+    setSaveError("");
     try {
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
@@ -55,10 +141,7 @@ const EditProfile = ({ user }) => {
           age,
           gender,
           about,
-          skills: skills
-            .split(",")
-            .map((skill) => skill.trim())
-            .filter((skill) => skill !== ""),
+          skills: skillsArray,
         },
         { withCredentials: true },
       );
@@ -68,9 +151,15 @@ const EditProfile = ({ user }) => {
         setShowToast(false);
       }, 3000);
     } catch (err) {
-      setError(err.response.data);
+      setSaveError(err.response.data);
     }
   };
+
+  // small red helper text shown directly under a field when it's invalid
+  const FieldError = ({ field }) =>
+    allErrors[field] ? (
+      <p className="text-error text-xs mt-1">{allErrors[field]}</p>
+    ) : null;
 
   return (
     <>
@@ -101,6 +190,10 @@ const EditProfile = ({ user }) => {
               {uploading && (
                 <span className="text-xs text-gray-400">Uploading...</span>
               )}
+              {/* photo upload failure (bad file type, too large, server error, etc.) */}
+              <FieldError field="photo" />
+              {/* the current photoURL itself not being a valid link */}
+              <FieldError field="photoURL" />
             </div>
 
             {/* Basic info */}
@@ -116,9 +209,12 @@ const EditProfile = ({ user }) => {
                 <input
                   type="text"
                   value={firstName}
-                  className="input input-bordered input-sm w-full"
+                  className={`input input-bordered input-sm w-full ${
+                    allErrors.firstName ? "input-error" : ""
+                  }`}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
+                <FieldError field="firstName" />
               </label>
 
               <label className="form-control w-full">
@@ -128,9 +224,12 @@ const EditProfile = ({ user }) => {
                 <input
                   type="text"
                   value={lastName}
-                  className="input input-bordered input-sm w-full"
+                  className={`input input-bordered input-sm w-full ${
+                    allErrors.lastName ? "input-error" : ""
+                  }`}
                   onChange={(e) => setLastName(e.target.value)}
                 />
+                <FieldError field="lastName" />
               </label>
 
               <div className="flex gap-3">
@@ -142,9 +241,12 @@ const EditProfile = ({ user }) => {
                     type="number"
                     min="18"
                     value={age}
-                    className="input input-bordered input-sm w-full"
+                    className={`input input-bordered input-sm w-full ${
+                      allErrors.age ? "input-error" : ""
+                    }`}
                     onChange={(e) => setAge(e.target.value)}
                   />
+                  <FieldError field="age" />
                 </label>
 
                 <label className="form-control flex-1">
@@ -199,6 +301,7 @@ const EditProfile = ({ user }) => {
                       </li>
                     </ul>
                   </div>
+                  <FieldError field="gender" />
                 </label>
               </div>
             </div>
@@ -210,14 +313,27 @@ const EditProfile = ({ user }) => {
               </p>
               <fieldset className="fieldset w-full">
                 <textarea
-                  className="textarea textarea-bordered w-full h-24"
+                  className={`textarea textarea-bordered w-full h-24 ${
+                    allErrors.about ? "textarea-error" : ""
+                  }`}
                   placeholder="Tell us about yourself..."
                   value={about}
                   onChange={(e) => setAbout(e.target.value)}
                 ></textarea>
-                <div className="label py-1">
-                  <span className="label-text-alt text-gray-500">Optional</span>
+                <div className="label py-1 flex justify-between">
+                  <span className="label-text-alt text-gray-500">
+                    Optional
+                  </span>
+                  {/* live character counter — turns red past the 500 limit */}
+                  <span
+                    className={`label-text-alt ${
+                      about.length > 500 ? "text-error" : "text-gray-500"
+                    }`}
+                  >
+                    {about.length}/500
+                  </span>
                 </div>
+                <FieldError field="about" />
               </fieldset>
             </div>
 
@@ -229,29 +345,61 @@ const EditProfile = ({ user }) => {
               <input
                 type="text"
                 value={skills}
-                className="input input-bordered input-sm w-full"
+                className={`input input-bordered input-sm w-full ${
+                  allErrors.skills ? "input-error" : ""
+                }`}
                 onChange={(e) => setSkills(e.target.value)}
                 placeholder="React, Node.js, MongoDB..."
               />
-              <p className="text-xs text-gray-500 mt-1">
-                Separate each skill with a comma
+              <p
+                className={`text-xs mt-1 ${
+                  skillsArray.length > 10 ? "text-error" : "text-gray-500"
+                }`}
+              >
+                Separate each skill with a comma — {skillsArray.length}/10 skills
               </p>
+              <FieldError field="skills" />
             </div>
 
-            {error && (
+            {saveError && (
               <p className="text-red-500 text-sm mt-3 break-words">
-                {typeof error === "string" ? error : JSON.stringify(error)}
+                {typeof saveError === "string"
+                  ? saveError
+                  : JSON.stringify(saveError)}
               </p>
             )}
 
-            <div className="card-actions justify-center mt-5">
-              <button
-                className="btn btn-primary w-full"
-                onClick={saveProfile}
-              >
-                Save Profile
-              </button>
-            </div>
+            {/* ---------- Validation summary + Save button area ---------- */}
+            {/* While ANY field (including a failed photo upload) is
+                invalid, the Save button is replaced entirely by an error
+                panel listing every current problem — the button only
+                reappears once every error clears. */}
+            {hasErrors ? (
+              <div className="alert alert-error flex-col items-start mt-5 text-sm">
+                <p className="font-bold mb-1">
+                  Can't save — fix the following before continuing:
+                </p>
+                <ul className="list-disc list-inside space-y-1 w-full">
+                  {Object.entries(allErrors).map(([field, message]) => (
+                    <li key={field} className="break-words">
+                      <span className="font-semibold capitalize">
+                        {field}:
+                      </span>{" "}
+                      {message}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div className="card-actions justify-center mt-5">
+                <button
+                  className="btn btn-primary w-full"
+                  onClick={saveProfile}
+                >
+                  Save Profile
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -269,10 +417,7 @@ const EditProfile = ({ user }) => {
               age,
               gender,
               about,
-              skills: skills
-                .split(",")
-                .map((skill) => skill.trim())
-                .filter((skill) => skill !== ""),
+              skills: skillsArray,
             }}
           />
         </div>
