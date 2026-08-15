@@ -20,11 +20,11 @@ const UserCard = ({ user, preview = false }) => {
   };
 
   return (
-    <div className="card bg-base-300 w-80 sm:w-96 shadow-2xl overflow-hidden rounded-2xl">
+    <div className="card bg-white border-2 border-black w-80 sm:w-96 shadow-2xl overflow-hidden rounded-2xl">
       <figure className="relative">
         <img src={photoURL} alt="photo" className="w-full h-80 object-cover" />
         {/* gradient overlay with name/age on top of the photo, tinder-style */}
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent px-4 pt-10 pb-3">
+        <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/20 to-transparent px-4 pt-10 pb-3">
           <h2 className="text-white text-2xl font-bold drop-shadow">
             {firstName + " " + lastName}
             {age ? <span className="font-normal text-xl">, {age}</span> : null}
@@ -34,9 +34,12 @@ const UserCard = ({ user, preview = false }) => {
       </figure>
 
       <div className="card-body p-5">
+        <p className="text-xs uppercase tracking-wide text-gray-400 mb-1.5 font-semibold">
+              About:
+            </p>
         {about && (
           <p
-            className={`text-sm text-gray-300 break-words ${
+            className={`text-sm text-black break-all ${
               preview ? "" : "line-clamp-3"
             }`}
           >
@@ -53,7 +56,7 @@ const UserCard = ({ user, preview = false }) => {
               {skills.map((skill, i) => (
                 <span
                   key={i}
-                  className="badge badge-primary badge-outline text-xs py-2.5 px-3 max-w-full truncate"
+                  className="badge badge-primary badge-outline text-xs py-2.5 px-3 max-w-full truncate bg-blue-500"
                 >
                   {skill}
                 </span>
@@ -72,7 +75,7 @@ const UserCard = ({ user, preview = false }) => {
               ✕
             </button>
             <button
-              className="btn btn-primary btn-circle btn-lg"
+              className="btn btn-circle btn-lg bg-pink-600 hover:bg-pink-700 text-white border-none"
               aria-label="Interested"
               onClick={() => handleSendRequest("interested", _id)}
             >

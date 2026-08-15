@@ -141,9 +141,9 @@ const Chat = () => {
     // Full-height chat shell instead of a small centered box — reads more
     // like an actual messaging app and uses the vertical space you have.
     <div className="flex justify-center px-2 sm:px-4 py-4">
-      <div className="flex flex-col w-full max-w-2xl h-[calc(100vh-9rem)] rounded-3xl overflow-hidden border border-base-100/40 shadow-2xl bg-base-300">
+      <div className="flex flex-col w-full max-w-2xl h-[calc(100vh-9rem)] rounded-3xl overflow-hidden border-2 border-black shadow-2xl bg-white">
         {/* ---------- Header ---------- */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-base-100/40 bg-base-200/80 backdrop-blur-sm">
+        <div className="flex items-center gap-3 px-4 py-3 border-b-2 border-black bg-white backdrop-blur-sm">
           {/* back button returns to the connections list */}
           <button
             onClick={() => navigate("/connections")}
@@ -174,7 +174,7 @@ const Chat = () => {
           )}
 
           <div className="min-w-0">
-            <p className="font-bold truncate">
+            <p className="font-bold truncate text-black">
               {targetUser
                 ? targetUser.firstName + " " + targetUser.lastName
                 : "Loading..."}
@@ -219,7 +219,7 @@ const Chat = () => {
               <div key={i}>
                 {showDateDivider && (
                   <div className="flex justify-center my-4">
-                    <span className="text-xs text-gray-400 bg-base-100 px-3 py-1 rounded-full">
+                    <span className="text-xs text-gray-600 bg-white border border-black px-3 py-1 rounded-full">
                       {formatDateDivider(m.createdAt)}
                     </span>
                   </div>
@@ -243,17 +243,17 @@ const Chat = () => {
                   )}
 
                   <div
-                    className={`chat-bubble ${
+                    className={`chat-bubble border-2 border-black ${
                       isOwn
                         ? "bg-green-600 text-white"
-                        : "bg-base-100 text-white"
+                        : "bg-white text-black"
                     }`}
                   >
                     {m.text}
                   </div>
 
                   {isLastOfGroup && (
-                    <div className="chat-footer text-[11px] text-gray-400 mt-1">
+                    <div className="chat-footer text-[11px] text-gray-600 mt-1">
                       {formatTime(m.createdAt)}
                     </div>
                   )}
@@ -273,7 +273,7 @@ const Chat = () => {
                   )}
                 </div>
               </div>
-              <div className="chat-bubble bg-base-100 flex items-center gap-1 py-3">
+              <div className="chat-bubble border-2 border-black bg-white text-black flex items-center gap-1 py-3">
                 <span className="typing-dot" />
                 <span className="typing-dot" />
                 <span className="typing-dot" />
@@ -286,10 +286,10 @@ const Chat = () => {
         </div>
 
         {/* ---------- Input box ---------- */}
-        <div className="p-3 border-t border-base-100/40 bg-base-200/60">
-          <div className="flex items-center gap-2 bg-base-100 rounded-full pl-4 pr-1.5 py-1.5">
+        <div className="p-3 border-t-2 border-black bg-white">
+          <div className="flex items-center gap-2 bg-white border-2 border-black rounded-full pl-4 pr-1.5 py-1.5">
             <input
-              className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500"
+              className="flex-1 bg-transparent outline-none text-sm text-black placeholder:text-gray-500"
               value={newMessage}
               onChange={handleTyping}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
@@ -344,7 +344,7 @@ const Chat = () => {
 
         .chat-scroll::-webkit-scrollbar { width: 6px; }
         .chat-scroll::-webkit-scrollbar-thumb {
-          background: rgba(255,255,255,0.15);
+          background: rgba(0,0,0,0.2);
           border-radius: 9999px;
         }
 

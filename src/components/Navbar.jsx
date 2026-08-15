@@ -30,15 +30,15 @@ const Navbar = () => {
 
   return (
     <div>
-      <div className="navbar bg-base-300 shadow-sm">
+      <div className="navbar bg-black text-white border-b-2 border-white shadow-sm">
         <div className="flex-1">
-          <Link to={user ? "/" : "/login"} className="btn btn-ghost text-xl">
+          <Link to={user ? "/" : "/login"} className="btn bg-linear-to-r from-[#FD2B7B] to-[#FF7158] border-none text-2xl text-white shadow-none">
             👩‍💻 DevTinder
           </Link>
         </div>
         {user && (
           <div className="flex items-center gap-2">
-            <p className="px-4">Welcome, {user.firstName}</p>
+            <p className="px-4 text-white text-lg">Welcome, {user.firstName}</p>
 
             <div className="dropdown dropdown-end mx-10">
               <div
@@ -46,28 +46,28 @@ const Navbar = () => {
                 role="button"
                 className="btn btn-ghost btn-circle avatar"
               >
-                <div className="w-10 rounded-full">
+                <div className="w-10 rounded-full border-2 border-green-500">
                   <img alt="user photo" src={user.photoURL} />
                 </div>
               </div>
 
               <ul
                 tabIndex={-1}
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+                className="menu menu-sm dropdown-content bg-black text-white border-2 border-white rounded-box z-1 mt-3 w-52 p-2 shadow text-base"
               >
                 <li>
-                  <Link to="/profile" className="justify-between">
+                  <Link to="/profile" className="justify-between hover:bg-white hover:text-black transition-colors">
                     Profile
                   </Link>
                 </li>
                 <li>
-                  <Link to="/connections">Connections</Link>
+                  <Link to="/connections" className="hover:bg-white hover:text-black transition-colors">Connections</Link>
                 </li>
                 <li>
-                  <Link to="/requests">Requests</Link>
+                  <Link to="/requests" className="hover:bg-white hover:text-black transition-colors">Requests</Link>
                 </li>
                 <li>
-                  <a onClick={handleLogout}>Logout</a>
+                  <a onClick={handleLogout} className="hover:bg-white hover:text-black transition-colors">Logout</a>
                 </li>
               </ul>
             </div>

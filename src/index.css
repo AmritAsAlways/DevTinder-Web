@@ -1,2 +1,58 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "whitetinder";
+  default: true;
+  color-scheme: light;
+  --color-base-100: #ffffff;
+  --color-base-200: #ffffff;
+  --color-base-300: #ffffff;
+  --color-base-content: #000000;
+  --color-primary: #000000;
+  --color-primary-content: #ffffff;
+  --color-secondary: #000000;
+  --color-secondary-content: #ffffff;
+  --color-accent: #000000;
+  --color-accent-content: #ffffff;
+  --color-neutral: #000000;
+  --color-neutral-content: #ffffff;
+  --color-info: #000000;
+  --color-info-content: #ffffff;
+  --color-success: #000000;
+  --color-success-content: #ffffff;
+  --color-warning: #000000;
+  --color-warning-content: #ffffff;
+  --color-error: #b91c1c;
+  --color-error-content: #ffffff;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --border: 2px;
+}
+
+html,
+body {
+  background-image: linear-gradient(to right, #FD2B7B, #FF7158);
+  min-height: 100vh;
+  color: #000000;
+}
+
+/* Force a visible black border on every card / input / interactive surface,
+   regardless of which utility classes a component uses. */
+.card,
+.input,
+.textarea,
+.select,
+.file-input,
+.btn,
+.badge,
+.navbar,
+.dropdown-content,
+.chat-bubble,
+.alert,
+.menu {
+  border-width: 2px;
+  border-style: solid;
+  border-color: #000000 !important;
+}

@@ -165,14 +165,14 @@ const EditProfile = ({ user }) => {
     <>
       <div className="flex flex-col lg:flex-row justify-center items-start gap-8 my-10 px-4 max-w-5xl mx-auto">
         {/* ---------- Form Card ---------- */}
-        <div className="card bg-base-300 shadow-xl w-full lg:w-[420px]">
+        <div className="card bg-white border-2 border-black shadow-xl w-full lg:w-105">
           <div className="card-body">
             <h2 className="card-title justify-center text-2xl mb-2">
               Edit Profile
             </h2>
 
             {/* Photo section */}
-            <div className="flex flex-col items-center gap-2 py-2 border-b border-base-100/40 mb-4">
+            <div className="flex flex-col items-center gap-2 py-2 border-b-2 border-black mb-4">
               {photoURL && (
                 <img
                   src={photoURL}
@@ -198,7 +198,7 @@ const EditProfile = ({ user }) => {
 
             {/* Basic info */}
             <div className="flex flex-col gap-3">
-              <p className="text-xs uppercase tracking-wide text-gray-400 font-semibold">
+              <p className="text-xs uppercase tracking-wide text-black font-semibold">
                 Basic Info
               </p>
 
@@ -308,7 +308,7 @@ const EditProfile = ({ user }) => {
 
             {/* About */}
             <div className="mt-4">
-              <p className="text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2">
+              <p className="text-xs uppercase tracking-wide text-black font-semibold mb-2">
                 About
               </p>
               <fieldset className="fieldset w-full">
@@ -339,7 +339,7 @@ const EditProfile = ({ user }) => {
 
             {/* Skills */}
             <div className="mt-2">
-              <p className="text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2">
+              <p className="text-xs uppercase tracking-wide text-black font-semibold mb-2">
                 Skills
               </p>
               <input
@@ -362,7 +362,7 @@ const EditProfile = ({ user }) => {
             </div>
 
             {saveError && (
-              <p className="text-red-500 text-sm mt-3 break-words">
+              <p className="text-red-500 text-sm mt-3 break-all">
                 {typeof saveError === "string"
                   ? saveError
                   : JSON.stringify(saveError)}
@@ -381,7 +381,7 @@ const EditProfile = ({ user }) => {
                 </p>
                 <ul className="list-disc list-inside space-y-1 w-full">
                   {Object.entries(allErrors).map(([field, message]) => (
-                    <li key={field} className="break-words">
+                    <li key={field} className="break-all">
                       <span className="font-semibold capitalize">
                         {field}:
                       </span>{" "}
@@ -405,7 +405,7 @@ const EditProfile = ({ user }) => {
 
         {/* ---------- Live Preview ---------- */}
         <div className="w-full lg:w-auto flex flex-col items-center gap-3 lg:sticky lg:top-10">
-          <p className="text-xs uppercase tracking-wide text-gray-400 font-semibold self-center lg:self-start">
+          <p className="text-xs uppercase tracking-wide text-black font-semibold self-center lg:self-start">
             Preview
           </p>
           <UserCard
@@ -425,7 +425,7 @@ const EditProfile = ({ user }) => {
 
       {showToast && (
         <div className="toast toast-top toast-center">
-          <div className="alert alert-success">
+          <div className="alert alert-success bg-green-600">
             <span>Profile saved successfully.</span>
           </div>
         </div>

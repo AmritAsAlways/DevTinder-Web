@@ -28,7 +28,7 @@ const Connections = () => {
   if (connections.length === 0)
     return (
       <div className="flex justify-center items-center my-20">
-        <h1 className="text-3xl font-bold text-white/80">
+        <h1 className="text-3xl font-bold text-black">
           No Connections Found
         </h1>
       </div>
@@ -36,7 +36,7 @@ const Connections = () => {
 
   return (
     <div className="my-10 px-4">
-      <h1 className="text-center text-white text-3xl font-bold mb-8 tracking-wide">
+      <h1 className="text-center text-black text-3xl font-bold mb-8 tracking-wide">
         Connections
       </h1>
 
@@ -48,7 +48,7 @@ const Connections = () => {
           return (
             <div
               key={_id}
-              className="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-5 rounded-2xl bg-base-300 shadow-md hover:shadow-xl hover:scale-[1.01] transition-all duration-200"
+              className="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-5 rounded-2xl bg-white border-2 border-black shadow-md hover:shadow-xl hover:scale-[1.01] transition-all duration-200"
             >
               <img
                 alt="photo"
@@ -57,7 +57,7 @@ const Connections = () => {
               />
 
               <div className="text-center sm:text-left flex-1 min-w-0">
-                <h2 className="font-bold text-xl break-words">
+                <h2 className="font-bold text-xl break-all">
                   {firstName + " " + lastName}
                 </h2>
                 {age && gender && (
@@ -66,7 +66,7 @@ const Connections = () => {
                   </p>
                 )}
                 {about && (
-                  <p className="text-sm text-gray-300 mb-2 break-words line-clamp-3">
+                  <p className="text-sm text-gray-700 mb-2 break-all line-clamp-3">
                     {about}
                   </p>
                 )}
@@ -93,7 +93,7 @@ const Connections = () => {
               <div className="shrink-0">
                 <Link
                   to={"/chat/" + connection._id}
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-sm bg-blue-600 hover:bg-blue-700 text-white border-none"
                 >
                   Chat
                 </Link>

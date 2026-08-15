@@ -36,7 +36,7 @@ const Feed = () => {
   if (feed.length <= 0)
     return (
       <div className="flex flex-col items-center justify-center my-24 gap-2">
-        <h1 className="text-3xl font-bold text-white/80">
+        <h1 className="text-3xl font-bold text-black">
           No new users found!
         </h1>
         <p className="text-gray-400 text-sm">

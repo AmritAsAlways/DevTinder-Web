@@ -77,7 +77,7 @@ const Login = () => {
             <>
               <label className="form-control w-full max-w-xs my-2">
                 <div className="label">
-                  <span className="label-text">First Name</span>
+                  <legend className="fieldset-legend">First Name</legend>
                 </div>
                 <input
                   type="text"
@@ -90,7 +90,7 @@ const Login = () => {
 
               <label className="form-control w-full max-w-xs my-2">
                 <div className="label">
-                  <span className="label-text">Last Name</span>
+                  <legend className="fieldset-legend">Last Name</legend>
                 </div>
                 <input
                   type="text"
@@ -125,7 +125,7 @@ const Login = () => {
           </fieldset>
 
           {error && (
-            <p className="text-red-500 text-sm break-words">
+            <p className="text-red-500 text-sm break-all">
               {typeof error === "string" ? error : JSON.stringify(error)}
             </p>
           )}

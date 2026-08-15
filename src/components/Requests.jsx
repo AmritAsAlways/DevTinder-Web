@@ -43,7 +43,7 @@ const Requests = () => {
   if (loading && !requests) {
     return (
       <div className="flex justify-center items-center my-20">
-        <h1 className="text-xl font-semibold text-white/60">Loading requests...</h1>
+        <h1 className="text-xl font-semibold text-black">Loading requests...</h1>
       </div>
     );
   }
@@ -52,14 +52,14 @@ const Requests = () => {
   if (!requests || requests.length === 0) {
     return (
       <div className="flex justify-center items-center my-20">
-        <h1 className="text-3xl font-bold text-white/80">No Requests Found</h1>
+        <h1 className="text-3xl font-bold text-black">No Requests Found</h1>
       </div>
     );
   }
 
   return (
     <div className="my-10 px-4">
-      <h1 className="text-center text-white text-3xl font-bold mb-8 tracking-wide">
+      <h1 className="text-center text-black text-3xl font-bold mb-8 tracking-wide">
         Connection Requests
       </h1>
 
@@ -72,7 +72,7 @@ const Requests = () => {
           return (
             <div
               key={request._id}
-              className="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-5 rounded-2xl bg-base-300 shadow-md hover:shadow-xl hover:scale-[1.01] transition-all duration-200"
+              className="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-5 rounded-2xl bg-white border-2 border-black shadow-md hover:shadow-xl hover:scale-[1.01] transition-all duration-200"
             >
               <div>
                 <img
@@ -90,7 +90,7 @@ const Requests = () => {
                     {age + " · " + gender}
                   </p>
                 )}
-                <p className="text-sm text-gray-300 mb-2 break-words line-clamp-3">
+                <p className="text-sm text-gray-700 mb-2 break-words line-clamp-3">
                   {about}
                 </p>
                 {skills?.length > 0 && (
