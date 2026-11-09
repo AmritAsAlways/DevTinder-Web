@@ -56,8 +56,9 @@ const UserCard = ({ user, preview = false }) => {
               {skills.map((skill, i) => (
                 <span
                   key={i}
-                  className="badge badge-primary badge-outline text-xs py-2.5 px-3 max-w-full truncate bg-blue-500"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 max-w-full truncate"
                 >
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/80 shrink-0" />
                   {skill}
                 </span>
               ))}
@@ -66,20 +67,44 @@ const UserCard = ({ user, preview = false }) => {
         )}
 
         {!preview && (
-          <div className="card-actions justify-center gap-4 mt-5">
+          <div className="card-actions justify-center gap-6 mt-5">
+            {/* Ignore — outlined, fills red on hover */}
             <button
-              className="btn btn-outline btn-error btn-circle btn-lg"
+              className="w-16 h-16 rounded-full flex items-center justify-center bg-white border-2 border-rose-500 text-rose-500 shadow-lg hover:bg-rose-500 hover:text-white hover:scale-110 hover:shadow-rose-400/50 active:scale-95 transition-all duration-200"
               aria-label="Ignore"
               onClick={() => handleSendRequest("ignored", _id)}
             >
-              ✕
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
             </button>
+
+            {/* Interested — solid pink/rose gradient, filled heart */}
             <button
-              className="btn btn-circle btn-lg bg-pink-600 hover:bg-pink-700 text-white border-none"
+              className="w-16 h-16 rounded-full flex items-center justify-center text-white bg-gradient-to-br from-pink-500 to-rose-600 shadow-lg hover:shadow-pink-500/50 hover:scale-110 active:scale-95 transition-all duration-200"
               aria-label="Interested"
               onClick={() => handleSendRequest("interested", _id)}
             >
-              ♥
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M12.001 4.529c2.349-2.532 6.15-2.532 8.498 0 2.349 2.531 2.349 6.638 0 9.17L12.001 22 3.501 13.7c-2.349-2.532-2.349-6.639 0-9.17 2.348-2.532 6.15-2.532 8.5 0z" />
+              </svg>
             </button>
           </div>
         )}

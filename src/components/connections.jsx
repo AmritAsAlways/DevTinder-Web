@@ -80,8 +80,9 @@ const Connections = () => {
                       {skills.map((skill, i) => (
                         <span
                           key={i}
-                          className="badge badge-primary badge-outline text-xs py-2.5 px-3 max-w-full truncate"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 max-w-full truncate"
                         >
+                          <span className="w-1.5 h-1.5 rounded-full bg-white/80 shrink-0" />
                           {skill}
                         </span>
                       ))}
@@ -93,8 +94,21 @@ const Connections = () => {
               <div className="shrink-0">
                 <Link
                   to={"/chat/" + connection._id}
-                  className="btn btn-sm bg-blue-600 hover:bg-blue-700 text-white border-none"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-sky-500 to-indigo-600 shadow-md hover:shadow-lg hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
                 >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                  </svg>
                   Chat
                 </Link>
               </div>
